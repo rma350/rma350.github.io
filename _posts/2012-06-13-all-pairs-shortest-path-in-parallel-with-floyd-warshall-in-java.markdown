@@ -2,7 +2,6 @@
 layout: post
 title:  "All Pairs Shortest Path in Parallel with Floyd Warshal in Java"
 date:   2012-06-13 11:54:00
-categories: algorithms java
 ---
 
 The [All Pairs Shortest Path](http://en.wikipedia.org/wiki/Shortest_path_problem#All-pairs_shortest_paths) (APSP) problem is to compute the shortest path between every pair of points in a directed weighted graph.  The [Floyd Warshall algorithm](http://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm) is a dynamic programming algorithm that solves the APSP problem in \\(O(V^3)\\) time. The running time is impressive, as there are \\(O(V^2)\\) pairs of nodes, so the average time spent per pair is \\(O(V)\\), faster than solving a standard shortest path problem.
