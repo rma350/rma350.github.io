@@ -1,0 +1,10 @@
+# Site settings
+title: Ross Anderson's Personal Website
+description: > # this means to ignore newlines until "baseurl:"
+  Website of Ross Anderson, Somerville MA.  Publications and blog.  Currently software engineer at Google, previously at MIT Operations Research Center.
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://rma350.github.io" # the base hostname & protocol for your site
+github_username:  rma350
+
+# Build settings
+markdown: kramdown
