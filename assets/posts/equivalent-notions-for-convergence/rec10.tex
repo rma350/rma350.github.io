@@ -1,0 +1,839 @@
+\documentclass{article}
+\usepackage{fullpage,amsmath,amssymb,amsthm,bbm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\newtheorem{exercise}{Exercise}
+\newtheorem{solution}{Solution}
+\newcommand{\Geo}{\mathop{\text{\rm Geo}}}
+\newcommand{\ER}{\mathop{\text{\rm ER}}}
+\newcommand{\Pois}{\mathop{\text{\rm Pois}}}
+\newcommand{\Bin}{\mathop{\text{\rm Bin}}}
+\renewcommand{\P}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\1}{\mathbb I}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Var}{\mathop{\text{\rm Var}}}
+\newcommand{\Exp}{\mathop{\text{\rm Exp}}}
+\newcommand{\Uni}{\mathop{\text{\rm Uni}}}
+\newcommand{\BL}{\mathop{\text{\rm BL}}}
+\usepackage{hyperref}
+\ProvidesPackage{hyperrefextras}
+\hypersetup{
+  colorlinks=true,
+}
+\newcommand{\eqhref}[1]{\hyperref[#1]{Equation \eqref{#1}}}
+\newcommand{\thmhref}[1]{\hyperref[#1]{Theorem \ref{#1}}}
+\newcommand{\defnhref}[1]{\hyperref[#1]{Definition \ref{#1}}}
+\newcommand{\lemhref}[1]{\hyperref[#1]{Lemma \ref{#1}}}
+\newcommand{\corlhref}[1]{\hyperref[#1]{Corollary \ref{#1}}}
+\newcommand{\sechref}[1]{\hyperref[#1]{Section \ref{#1}}}
+\newcommand{\fighref}[1]{\hyperref[#1]{figure \ref{#1}}}
+\newcommand{\alghref}[1]{\hyperref[#1]{Algorithm \ref{#1}}}
+\newcommand{\tabhref}[1]{\hyperref[#1]{table \ref{#1}}}
+\newcommand{\exerhref}[1]{\hyperref[#1]{Exercise \ref{#1}}}
+\newcommand{\examhref}[1]{\hyperref[#1]{Example \ref{#1}}}
+\begin{document}
+\begin{flushright}
+  Recitation 10--v3\\
+  \today\\
+  Ross Anderson
+\end{flushright}
+
+\section{Equality in Distribution and Convergence in Distribution}
+
+\subsection{Review of Definitions}
+
+In this section, we consider several perspectives on what it means for
+two random variables to be ``equal'' or converging.  First we review
+some definitions from class.
+\begin{definition}
+  Given two random variables $X$ and $Y$, we say that $X =_d Y$ or $X$
+  is \emph{equal in distribution} to $Y$ if for every $t \in \R$, $P(X \leq
+  t) = \P(Y \leq t)$.
+\end{definition}
+\begin{small}  
+\begin{example}
+  Suppose that $X \sim \Bin(n,1/2)$ and $Y = n-X$.  We claim that $X =_d Y$.  For all $t$,
+  letting $k = \lfloor t \rfloor$, we have
+  \begin{align*}
+    \P(X \leq k) = \sum_{i=0}^k \binom n i \left(\frac{1}{2}\right)^i
+    \left(1 - \frac 12\right)^{n-i} =\left(\frac{1}{2}\right)^n
+    \sum_{i=0}^k \binom n i
+  \end{align*}
+  and
+  \begin{align*}
+    \P(Y \leq k) &= \P(n-X \leq k) =\P(X \geq n- k) = \sum_{i=n-k}^n
+    \binom n i \left(\frac{1}{2}\right)^i \left(1 - \frac
+      12\right)^{n-i} =\left(\frac{1}{2}\right)^n \sum_{i=n-i}^n
+    \binom n i\\
+    &= \left(\frac{1}{2}\right)^n \sum_{i=n-i}^n \binom {n}
+    {n-i} = \left(\frac{1}{2}\right)^n \sum_{j=0}^k \binom {n} {j} = \P(X \leq k).
+  \end{align*}
+  where we have used the identity $\binom{n}{i} = \binom{n}{n-i}$.
+\end{example}
+\end{small}
+This can be generalized relatively easily:
+\begin{exercise}
+  For any random variable $Z$ that is symmetric about zero ($\P(Z \geq
+  t) = \P(Z \leq -t)$ for all $t \geq 0$, prove that $Z =_d -Z$.  Then
+  reprove the claim in the above example by considering the random
+  variable $X - n/2$.  
+\end{exercise}
+Note that while in these examples, it was the case that both $X$ and $Y$ lived on a common
+probability space, this in general need not be the case.
+\begin{definition}
+  Given a sequence of random variables $X_n$ and a random variable $X$,
+  we say that $X_n \to_d X$ or $X_n$ \emph{converges in distribution} to $X$
+  if for every $t \in \R$ such that $\P(\{X = t\}) = 0$, we have that
+  \begin{align*}
+    \lim_{n \to \infty} \P(X_n \leq t) = \P(X \leq t).
+  \end{align*}  
+\end{definition}
+\begin{small}
+\begin{example}
+  Suppose that $X_n$ is a the discrete random variable that for $i =
+  1,\ldots,n$, satisfies $\P(X = i/n) = 1/n$, and that $X \sim
+  \Uni(0,1)$.  We claim that $X_n \to_d X$.  As $X$ is continuous (and
+  thus $\P(X = t) = 0$ for all $t$), we must check convergence of the
+  cdf at every $t$ in the support of $X$.  For $t \in (0,1)$, we have
+  \begin{align*}
+    \left|\left\{\frac{i}{n} \colon \frac i n \leq t\right\}\right| =
+    \lfloor t n \rfloor
+  \end{align*}
+  thus
+  \begin{align*}
+    \lim_{n \to \infty} \P(X_n \leq t) = \lim_{n \to \infty}
+    \left|\left\{\frac{i}{n} \colon \frac i n \leq t\right\}\right|
+    \frac{1}{n} = \lim_{n \to \infty}\frac{\lfloor t n\rfloor}{n} = t
+  \end{align*}
+  showing the claim.
+\end{example}
+\end{small}
+
+\subsection{Equivalent Notions}
+
+For a random variable $X$, we let $\phi_X(t) = \E[\exp(itX)]$ be the
+\emph{characteristic function}, $M_X(t) = \E[\exp(tX)]$ be the
+\emph{moment generating function}, and $\mathcal L_X(t) =
+\E[\exp(-tX)]$ be the \emph{Laplace transform}.  In lecture 18, we stated that $X =_d Y$ iff
+$\phi_X(t) =\phi_Y(t)$ for $t \geq 0$, and that a sequence of random
+variables $X_n \to_d X$ iff $\phi_{X_n}(t) \to \phi_X(t)$ as $n \to
+\infty$ for all $t \geq 0$.  We have some analogous results for moment
+generating functions and Laplace transforms, under the assumption that the moment generating
+function was defined.
+
+The notion that $\E[f(X)]$ for all $f \in F$ determines the
+distribution of $X$ is actually quite general.  Taking $F =\{\1(x \leq
+t) \mid t \in \R\}$, we can generalize our original definition of
+equality in distribution.  However, for convergence in distribution to
+$X$, we need the more carefully chosen set of $F =\{\1(x \leq t) \mid
+t \in \R, F_X \text{ is continuous at } t\}$.  We can extend this idea
+to other sets $F$ as follows.
+
+\begin{theorem}
+  \label{thm:equality}
+  Given random variables $X$ and $Y$, the following are equivalent:
+  \begin{enumerate}
+  \item [a.] $X =_d Y$
+  \item [b.] For all $t \geq 0$, $\phi_X(t) = \phi_Y(t)$
+  \item [c.] For a sequence $t_n \to 0$, for all $n$, $\phi_X(t_n) = \phi_Y(t_n)$
+  \item [d.] For every bounded continuous function $f$, $\E[f(X)] = \E[f(Y)]$.
+  \item [e.] For every bounded Lipschitz function $f$, $\E[f(X)] = \E[f(Y)]$.
+  \item [f.] For every function $f$ with $\|f\|_{\BL} \leq 1$, $\E[f(X)] = \E[f(Y)]$.\footnote{
+  {\bf Aside: Bounded Lipschitz Functions.} A function $f \colon \R \to \R$ is $\alpha$-Lipschitz if for all $x, y \in \R$,
+\begin{align*}
+  |x - y| \leq \alpha |f(x) - f(y)|.
+\end{align*}
+We let
+\begin{align*}
+  \|f\|_L = \inf\{\alpha \geq 0 \mid f_L = \inf\{\alpha \geq 0 \mid
+  \forall x,y \in \R,\, |x - y| \leq \alpha |f(x) - f(y)|\}.
+\end{align*}
+be the smallest Lipschitz constant a function satisfies, or $\infty$
+if $f$ satisfies no Lipschitz constant.  We let
+\begin{align*}
+  \|f\|_\infty = \sup_{x \in \R} |f(x)|,
+\end{align*}
+and
+\begin{align*}
+  \|f\|_{\BL} = \|f\|_L + \|f\|_\infty.
+\end{align*}
+It turns out that $\|\cdot\|_{\BL}$ is in fact a
+\href{http://en.wikipedia.org/wiki/Metric_(mathematics)}{metric}, \cite{dudley2002real}, although the proof of this is
+beyond the scope of our discussion.
+}
+  \end{enumerate}
+  If in addition, $X \geq 0$ a.s. and $M_X(t) < \infty$ for $t > 0$, then the following
+  are also equivalent:
+  \begin{enumerate}
+  \item [g.] For all $0 \leq s \leq t$, $\mathcal L_X(s) = \mathcal L_Y(s)$
+  \item [h.] For a sequence $s_n \to 0$, for all $n$, $\mathcal L_X(s_n) = \mathcal L_Y(s_n)$
+  \item [i.] For all $n \in \Z_+$, $\E[X^n] = \E[Y^n]$ (existence is implied by the finiteness of the m.g.f., see pset 7).
+    \item [j.] For all $0 \leq s \leq t$, $M_X(s) = M_Y(s)$
+  \item [k.] For a sequence $s_n \to 0$, for all $n$, $M_X(s_n) = M_Y(s_n)$
+  \end{enumerate}
+\end{theorem}
+Note that the assumption $X \geq 0$ for (g)-(k) is essential,
+otherwise for any random variable $Z$ with $\E[Z] = \infty$ but $Z
+\geq 0$, by taking $X = -Z$ we could violate the theorem.  We give an
+intermediate lemma that is of general use before giving the proof.
+\begin{lemma}
+  \label{lem:expectation}
+  If $X =_d Y$, then for any measurable function $f$ where $\E[f(X)]$
+  exists, $\E[f(X)] = \E[f(Y)]$.
+\end{lemma}
+\begin{proof}
+  For convenience, we show this for $f \geq 0$ and leave the general
+  case to the reader (consider the positive and negative parts
+  separately).  For any interval $[a,b)$, we have $\P(f(X) \in [a,b))
+  = \P(f(Y) \in [a,b))$ as $X =_d Y$.  Recalling the canonical
+  construction for computing the expectation of a nonnegative quantity
+  through simple functions (or instead by the MCT), we see that
+  \begin{align*}
+    \E[f(X)] = \lim_{n \to \infty} \sum_{i=0}^{n2^{n}}
+    \frac i {2^n} \cdot\P\left(\frac{i}{2^n} \leq f(X) < \frac{i+1}{2^n}\right) = \lim_{n
+      \to \infty} \sum_{i=0}^{n2^n} \frac i {2^n} \cdot\P\left(\frac{i}{2^n} \leq f(Y) <
+      \frac{i+1}{2^n}\right) = \E[f(Y)],
+  \end{align*}
+  showing the claim.
+\end{proof}
+\begin{proof}[Proof of \thmhref{thm:equality}]
+  By \lemhref{lem:expectation}, it is immediate that (a) implies (b)-(k).
+    
+  We have (a) implies (b), it is immediate that (b) implies (c),
+  and that (c) implies (a) requires the use of complex analysis and is
+  beyond the scope of this course (see \cite{durrett2010probability}
+  and also lecture 16, the inversion theorem).  The proof that (c)
+  implies (a) uses the concept of \emph{analytic continuation}, that a
+  complex differentiable function is determined entirely by its values
+  on a convergence sequence.
+
+  Similarly, under the assumption that $M_X(t) < \infty$ for $t > 0$,
+  we have that (a) implies (j), (j) immediately implies (k), and that
+  (k) implies (a) requires the same tools from complex analysis.
+  Again (a) implies (g) implies (h), and that (h) implies (a) requires
+  complex analysis.
+
+  Next, (a) implies (i) as $M_X(t) < \infty$ for $t > 0$ implies finiteness of moments.  We now claim that
+  (i) implies (j).  For any $0 \leq s \leq t$ where $M_X(t) < \infty$,
+  let
+  \begin{align*}
+    S_n &= \sum_{k=0}^n \frac{(sX)^k}{k!}& S &= \exp(sX),\\
+    T_n &= \sum_{k=0}^n \frac{(sY)^k}{k!}& T &= \exp(sY).\\
+  \end{align*}
+  As $\E[S] = M_X(s)$ and $\E[T] = M_Y(s)$, it suffices to show that $\E[S] = \E[T]$.
+  By linearity of expectation, we have
+  \begin{align}
+    \label{eq:sameSeq}
+    \E[S_n] &= \sum_{k=0}^n \frac{s^k\E[X^k]}{k!} = \sum_{k=0}^n \frac{s^k\E[Y^k]}{k!} = \E[T_n],
+  \end{align}
+  where the middle equality follows from (i).  Thus if $\E[S_n] \to
+  \E[S]$ and $\E[T_n] \to \E[T]$ as $n \to \infty$, then we have shown
+  the claim.  By construction, $S_n \to S$ a.s. and $T_n \to T$ a.s.
+  As $X,Y \geq 0$, the convergence is monotone from below, thus by the
+  MCT, $\E[S_n] \to \E[S]$ and $\E[T_n] \to \E[T]$.  As by
+  \eqref{eq:sameSeq}, these sequences are the same, this implies that
+  $\E[S] = \E[T]$.
+
+  We already have (a) implies (d), and (d) implies (e) implies (f) as
+  every Lipschitz function is continuous.  To obtain (f) implies (a),
+  we must show that for every $a \in \R$ that $\P(X > a) = \P(Y
+  > a)$.  For $n = 1,2,\ldots,$ let $f_n$ be the continuous piecewise linear function
+  \begin{align*}
+    f_n(x) =
+    \begin{cases}
+      0& x < a \\
+      \text{linear}& a \leq x \leq a + \frac 1n\\
+      1 & x > a+\frac 1n.
+    \end{cases}
+  \end{align*}
+  Observe that $f_n \to \1(x > a)$ pointwise and monotonically from
+  below, thus $\E[f_n(X)] \to \E[\1(X > a)] = \P(X > a)$ as $n \to
+  \infty$, and likewise $\E[f_n(Y)] \to \P(Y > a)$ as $n \to \infty$.
+  Thus it suffices to show that $\E[f_n(X)] = \E[f_n(Y)]$ for all $n$.
+  Note that $\|f_n\|_{\sup} = 1$ and $\|f\|_L = n$, so $\|f\|_{\BL} =
+  n+1$, thus had we assumed (e), we would be done.  However, letting
+  $g_n(x) = f_n(x)/(n+1)$, we have that $\|g_n\|_{\BL} \leq 1$, so
+  \begin{align*}
+    \E[f_n(X)] = \E\left[(n+1) g_n(X)\right] = (n+1)\E\left[ g_n(X)\right] = (n+1)\E\left[ g_n(Y)\right] = \E[f_n(Y)],
+  \end{align*}
+  giving the result.  
+\end{proof}
+\begin{small}
+  \begin{example}
+  Recall from your homework the following problem: if $X_1,\ldots,X_n$
+  are i.i.d. $\Exp(\lambda)$, show that $S_n = X_1 + \cdots + X_n$
+  (the Erlang distribution) has density for $x \geq 0$ of
+  \begin{align*}
+    f_{S_n}(x) = \frac{\lambda^n x^{n-1} \exp(-\lambda x)}{(n-1)!}.
+  \end{align*}
+  In your homework, we asked you to compute the $n$-fold convolution,
+  but it is much easier to just use the equivalence of (a) and (g).
+  We have that for all $s < \lambda$,
+  \begin{align*}
+    \E\left[\exp\left(s \sum_{i=1}^n X_i\right)\right] = \E[\exp(s
+    X_1)]^n = \left(1 - \frac t \lambda\right)^{-n} = \int_0^\infty
+    \exp(sx)\frac{\lambda^n x^{n-1} \exp(-\lambda x)}{(n-1)!}dx
+  \end{align*}
+  (integration by parts $n$ times yields that $\int_0^\infty x^n \exp(-x)dx = n!$).
+\end{example}
+\end{small}
+This result extends nicely to convergence in distribution.  In fact,
+we see that (b)-(f) extend more intuitively than (a) does.
+\begin{theorem}
+  \label{thm:convergence}
+ Given a sequence of random variables $X_n$ and a random variable $X$, the following are equivalent:
+  \begin{enumerate}
+  \item [a.] $X_n \to_d X$
+  \item [b.] For all $t \geq 0$, $\lim_{n \to \infty} \phi_{X_n}(t) = \phi_X(t)$
+  \item [c.] For a sequence $t_m \to 0$, for all $m$, $\lim_{n \to \infty} \phi_{X_n}(t_m) = \phi_X(t_m)$
+  \item [d.] For every bounded continuous function $f$, $\lim_{n \to \infty}\E[f(X_n)] = \E[f(X)]$.
+  \item [e.] For every bounded Lipschitz function $f$, $\lim_{n \to \infty}\E[f(X_n)] = \E[f(X)]$.
+  \item [f.] For every function $f$ with $\|f\|_{\BL} \leq 1$, $\lim_{n \to \infty}\E[f(X_n)] = \E[f(X)]$.
+  \end{enumerate}
+  If in addition, we have {\bf Assumption A1:} $X_n \geq 0$ a.s. and there exists $t > 0$ such that for all $n$, $M_{X_n}(t), M_X(t) < \infty$, then the following
+  are also equivalent:
+  \begin{enumerate}
+    \item [g.] For all $0 \leq s \leq t$, $\lim_{n \to \infty} \mathcal L_{X_n}(s) = \mathcal L_{X}(s)$
+  \item [h.] For a sequence $s_m \to 0$, for all $m$, $\lim_{n \to \infty} \mathcal L_{X_n}(s_m) = \mathcal L_X(s_m)$
+  \end{enumerate}
+  If in addition to Assumption A1, we have {\bf Assumption A2:} $\sup_n \E[X_n^p] < \infty$ for all $p \in \Z_+$, then the following is also equivalent:
+  \begin{enumerate}
+  \item [i.] For all $m \in \Z_+$, $\lim_{n \to \infty} \E[X_n^m] =
+    \E[X^m]$.  
+  \end{enumerate}
+  If in addition to Assumption A1, we have {\bf Assumption A3:} that $\sup_n \E[\exp(tX_n)] < \infty$, then the following is also equivalent:
+  \begin{enumerate}
+\item [j.] For all $0 \leq s < t$, $\lim_{n \to \infty} M_{X_n}(s) = M_{X}(s)$
+  \item [k.] For a sequence $s_m \to 0$, for all $m$, $\lim_{n \to \infty} M_{X_n}(s_m) = M_X(s_m)$
+  \end{enumerate}
+\end{theorem}
+Note that Assumptions A2 and A3 cannot be weakened if we want a
+necessary and sufficient condition, as (i) alone implies A2 and (j)
+implies A3.  In particular, we do not need to verify A2 if we are only
+using the direction that (i) implies (a), and likewise for A3 and (j)
+implies (a).  This idea will be further explored in
+\lemhref{lem:tech}.
+
+The equivalence of (a) with (d)-(f) is part of the
+\href{http://en.wikipedia.org/wiki/Portmanteau_theorem}{Portmanteau
+  Theorem}, which adds several more equivalences.  The word
+Portmanteau is French and has an
+\href{http://en.wikipedia.org/wiki/Portmanteau#Origin}{interesting
+  etymology}.  We only prove the equivalence of (a) with (d)-(f), but
+show that (a) implies (b)-(h).  In the appendix we show
+that (a) implies (i)-(k) and that any of (b)-(c) or (g)-(k) imply (a) using
+more sophisticated tools.
+\begin{proof}[Proof of (a) implies (b)-(h), (d)-(f) implies (a)]
+  First, we claim that for any bounded continuous function $f$, $X_n
+  \to_d X$ implies \mbox{$\lim_{n \to \infty} \E[f(X_n)] = \E[f(X)]$,} thus
+  (a) implies (b)-(h), noting that $f(x) = \exp(itx) = \sin(tx) +
+  i\cos(tx)$ is a bounded continuous function.  Recall the Skorokhod
+  representation theorem (Theorem 1 of Lecture 18), that $X_n \to_d X$
+  implies that there exists $Y_n =_d X_n$ and $Y =_d X$ such that $Y_n
+  \to Y$ a.s.  For any bounded function $f$, by the Bounded
+  Convergence Theorem (BCT), $\lim_{n \to \infty} \E[f(Y_n)] =
+  \E[f(Y)]$.  Finally, as from \thmhref{thm:equality} where (a)
+  implies (d), we have that $\E[f(X_n)] = \E[f(Y_n)]$ and $\E[f(X)] =
+  \E[f(Y)]$, thus
+  \begin{align*}
+    \lim_{n \to \infty} \E[f(X_n)] =\lim_{n \to \infty} \E[f(Y_n)] = \E[f(Y)] =  \E[f(X)]
+  \end{align*}
+  showing the claim.
+
+  We have that (a) implies (d), and it is immediate that (d) implies
+  (e) implies (f), so it suffices to show that (f) implies (a).
+  Instead we will show that (e) implies (a).  A similar trick to the
+  proof from \thmhref{thm:equality} allows us to show (f) implies (a)
+  instead.  Fixing $a \in \R$, we need to prove that $\lim_{n \to
+    \infty} \P(X_n \leq a) = \P(X \leq a)$.  Following
+  \cite{durrett2010probability}, for every $\epsilon > 0$, we define
+  the piecewise linear continuous functions
+  \begin{align*}
+    g_{t,\epsilon}(x) =
+    \begin{cases}
+      1 & x \leq t\\
+      \text{linear} &t < x < t + \epsilon\\
+      0 & x \geq t + \epsilon
+    \end{cases}
+  \end{align*}
+  To show the desired limit, we can show that both $\limsup$ and
+  $\liminf$ equal the limit.  For every $\epsilon > 0$, we have
+  \begin{align*}
+    \limsup_{n \to \infty} \P(X_n \leq a) = \limsup_{n \to \infty} \E[\1(X_n \leq a)] \leq  \limsup_{n \to \infty} \E[g_{a,\epsilon}(X_n)] = \E[g_{a,\epsilon}(X)] \leq \P(X \leq a + \epsilon),
+  \end{align*}
+  where the final equality follows as $g_{a,\epsilon}$ is a bounded
+  Lipschitz function, so by (f) the $\limsup$ is just the
+  limit. Taking $\epsilon \to 0$, we have $\limsup_{n \to \infty}
+  \P(X_n \leq a) \leq \P(X \leq a + \epsilon)$ as the cdf is always right continuous.  Similarly,
+  \begin{align*}
+    \liminf_{n \to \infty} \P(X_n \leq a) \geq \liminf_{n \to \infty} \E[g_{a-\epsilon,\epsilon}(X_n)] = \E[g_{a-\epsilon,\epsilon}(X)] \geq \P(X \leq a - \epsilon).
+  \end{align*}
+  Finally, as the cdf is left continuous at $a$ iff $\P(X = a) =0$, we
+  have that when $a$ is a continuity point, then by taking $\epsilon
+  \to 0$, we have that $\liminf_{n \to \infty} \P(X_n \leq a) \geq
+  \P(X \leq a)$.  This shows the result.
+\end{proof}
+You may have noticed that the proof that (f) implies (a) in
+\thmhref{thm:convergence} requires a construction which is very
+similar to the proof that (f) implies (a) in \thmhref{thm:equality}.
+In the appendix, more sophisticated and general tools are introduced
+that allow us to eliminate this redundancy with an alternate proof.
+
+
+Note that under slightly strong assumptions there is a simple proof that (i) implies (j)
+much like that proof that (i) implies (j) from \thmhref{thm:equality}.
+\begin{exercise}
+  If $\lim_{n \to \infty} \sup_m | \E[X_n^m] - \E[X^m]| = 0$
+  (i.e. $\E[X_n^m] \to \E[X^m]$ as $n \to \infty$ uniformly in $m$),
+  then show that $0 \leq s \leq t$, $\lim_{n \to \infty} M_{X_n}(s) = M_{X}(s)$.
+\end{exercise}
+\begin{exercise}
+  \label{exer:moreDomination}
+  Without further qualification, (j) seems to be at least as strong as (i).
+  \begin{enumerate}
+  \item [a.]If $Z_n \to Z$ a.s., $\E[Z_n] \to \E[Z]$, $Y_n \leq Z_n$ a.s., and $Y_n \to Y$ a.s., show that $\E[Y_n] \to \E[Y]$.  \emph{Hint:} Uniform integrability (defined in the next section) may be helpful, see \cite{resnick1998probability} ``More domination'' page 183 for a solution.
+  \item [b.] Assume only that $X_n \to_d X$ and that there exists $s>0$
+    such that $\lim_{n \to \infty} M_{X_n}(s) = M_{X}(s)$.  Show that
+    for all $p \in \Z_+$, $\E[X_n^p] \to \E[X^p]$.  \emph{Hint:}
+    Equivalently, show that $\E[s^pX_n^p/p!] \to \E[s^pX^p/p!]$ for all $p$.
+  \end{enumerate}  
+\end{exercise}
+\begin{exercise}
+  This exercise shows that without Assumptions A2 and A3, we would not have (a) implies (i)-(k).
+  Consider the following probability space $(\Omega,\mathcal F, \P)$,
+  $\Omega = (0,1)$, $\mathcal F$ is the Borel sets, $\P$ is the
+  Lebesgue measure.  Let $X_n(\omega) = n$ for $\omega < 1/n$ and $0$
+  otherwise.  Let $X = 0$.  Show that $X_n \to X$ a.s., $\mathcal
+  L_{X_n}(s) \to L_{X}(s)$ for all $s$, but that $M_{X_n}(s) \not \to
+  M_X(s)$ for any $s > 0$ and $\E[X_n^p] \not \to \E[X^p]$ for any $p
+  \geq 1$.
+\end{exercise}
+\begin{exercise}
+  What is the relationship between assumptions A2 and A3?
+  \begin{enumerate}
+  \item [a.] Show that Assumption A3 implies assumption A2 (very similar \exerhref{exer:moreDomination} part b).
+  \item [b.] (Open question, for the author) Does Assumption A2 imply A3?
+    Contact me if you have a solution.
+  \end{enumerate}
+\end{exercise}
+\begin{exercise}[Continuous Mapping]
+  \label{exer:continuousMapping}
+  If $X_n \to_d X$, show that for any continuous function $f$, $f(X_n)
+  \to f(X)$.  \emph{Hint:} use the equivalence of (a) and (d), or
+  Skorokhod's Representation Theorem and \thmhref{thm:equality}.  Then
+  improve your result: if $A \subset \R$ is the set of points in the
+  domain of $f$ such that $f$ is continuous, show that the claim still
+  holds if $\P(X \in A) = 1$.
+\end{exercise}
+
+
+
+\section{Appendix--Convergence in Distribution and  Moments}
+
+This section uses slightly more sophisticated tools than what we
+covered in this course, and is only intended as a reference for the
+curious.
+
+\subsection{Uniform Integrability, \thmhref{thm:convergence} (a) implies (i)-(k)}
+
+In this section, we prove some of the missing parts of
+\thmhref{thm:convergence}, that (a) implies (i)-(k).  Looking back at
+the proof that (a) implies any of the other parts of
+\thmhref{thm:convergence}, we used the following technique: upgrade
+convergence in distribution to almost sure convergence using the
+Skorokhod Representation Theorem, and then apply a convergence theorem
+to interchange the expectation and the limit.  In the parts proven
+thus far, we were able to use the bounded convergence theorem, but for
+$X_n^p$ and $\exp(sX_n)$, this of course will not apply.  As a
+dominating function is not easily identified here, we need to first
+introduce a stronger convergence theorem than the DCT, the Vitali
+Convergence Theorem.
+\begin{definition}
+  A set of random variables $\mathcal X$ is $p$-uniformly integrable if
+  \begin{align}
+    \label{eq:uniformIntegrability}
+    \lim_{t \to \infty} \sup_{X \in \mathcal X} \E[|X|^p\1(|X|^p > t)] = 0.
+  \end{align}
+\end{definition}
+\begin{theorem}[Vitali]
+  \label{thm:vitali}
+  Suppose that $X_n$ is a sequence of random variables and $X$ is a random variable.  Then the following are equivalent:
+  \begin{enumerate}
+  \item [a.] $X_n$ is $p$-uniformly integrable and $X_n \to X$ i.p.
+  \item [b.] $\lim_{n \to \infty} \E[|X_n - X|^p] = 0$.
+  \item [c.] $\E[X_n^p] \to \E[X^p]$ and $X_n \to X$ i.p.
+  \end{enumerate}
+\end{theorem}
+The equivalence between (b) and (c) is much easier to show and not
+typically attributed to Vitali.  The convergence in b., that $\lim_{n
+  \to \infty} \E[|X_n - X|^p] = 0$ is usually called $L_p$.
+\begin{lemma}[Crystal Ball Condition]
+  \label{lem:crystal}
+  For $X_n,X \geq 0$, if $X_n \to_d X$ and there exists $t>0$ such that
+  $\sup_{n} \E[X_n^t] < \infty$, then for all $s < t$, $\lim_{n \to
+    \infty} \E[X_n^s] = \E[X^s]$.
+\end{lemma}
+While a proof of this result can be found in any text, I have only ever seen it by this name in \cite{resnick1998probability}.
+\begin{proof}
+  Instead, we will show the result for all $s \leq t/2$.  A proof in
+  the general case is almost the same, but H\"older's Inequality is
+  substituted for Cauchy-Schwarz.
+
+
+  First, as $X_n \to_d X$ iff $X_{n}+1 \to_d X+1$ and $\sup_{n}
+  \E[X_n^t] < \infty$ iff $\sup_{n} \E[(X_n+1)^t] < \infty$, WLOG we can
+  assume that $X_n \geq 1$.  By the Skorokhod Representation Theorem,
+  there exists $Y_{n}$ and $Y$ with $Y_{n} =_d X_{n}$ for all $i$ and
+  $Y =_d X$ such that $Y_{n} \to Y$ a.s., and thus in probability as
+  well.  By \lemhref{lem:expectation}, it suffices to instead prove
+  that for all $f \in F$, $\lim_{n \to \infty} \E[Y_{n}^s] = \E[Y^s]$.
+  By \thmhref{thm:vitali}, it suffices to show that $Y_{n}$ are
+  $s$-uniformly integrable for $s \leq t/2$.  Recalling that $Y_{n}
+  \geq 1$, we verify \eqref{eq:uniformIntegrability} as
+  \begin{align}
+    \label{eq:cauchy}
+    \lim_{t \to \infty} \sup_n \E[Y_{n}^s \1(Y_{n}^s \geq t)] &\leq \lim_{t \to \infty} \sup_n \sqrt{\E[Y_{n}^{2s}]\E[\1(Y_{n}^s \geq t)^2]}\\
+    \nonumber
+    &\leq \lim_{t \to \infty}\sqrt{\sup_n \E[Y_{n}^{2s}]}\sqrt{\sup_n\P(Y_{n}^s > t)}\\
+    \label{eq:markov}
+    &\leq \lim_{t \to \infty}\sqrt{\sup_n \E[Y_{n}^{2s}]}\sqrt{\sup_n\frac{\E[Y_{n}^s]}{t}}\\
+    \label{eq:st}
+    &\leq \sqrt{\sup_n \E[Y_{n}^{t}]} \sqrt{\sup_n\E[Y_{n}^t]}\lim_{t \to \infty} \frac{1}{\sqrt{t}}\\
+    \label{eq:bounded}
+    & =0,
+  \end{align}
+  showing the claim.  In \eqref{eq:cauchy} we used Cauchy-Schwarz and
+  in \eqref{eq:markov} we used Markov.  We have \eqref{eq:st} as
+ $X_n =_d Y_n$ and \lemhref{lem:expectation} imply that
+  $\E[Y_{n}^{2s}] = \E[X_{n}^{2s}] \leq \E[X_n^t] = \E[Y_n^t]$ and $\E[Y_n^{s}] = \E[X_n^s] \leq \E[X_n^t] = \E[Y_n^t]$ (as $s \leq t/2$ and $X_n \geq 1$).
+  Finally, to justify \eqref{eq:bounded}, recall that we assumed
+  $\sup_n \E[X_n^t] < \infty$.  
+\end{proof}
+
+
+
+
+
+\begin{proof}[Proof of \thmhref{thm:convergence} (a) implies (i),(j)]
+  First we prove that (a), $X_n \to_d X$, Assumption A1, and
+  Assumption A2, imply (i), that for all $m$, $\lim_{n \to \infty}
+  \E[X_n^m] = \E[X^m]$.  For each $m$ and apply \lemhref{lem:crystal} with
+  $t= m+1$ and $s = m$, where $\sup_n \E[X_{n}^{m+1}]$ is finite by
+  Assumption A2.
+
+  Similarly, we now show that (a), Assumption A1, and Assumption A3
+  imply (j), that for $0 \leq s < t$, $\lim_{n \to \infty}
+  \E[\exp(sX_n)] \to \E[\exp(sX)]$.  Let $Y_n = \exp(sX_n)$ and $Y =
+  \exp(sX)$.  By \exerhref{exer:continuousMapping}, we have that $Y_n
+  \to_d Y$.  As $Y_n^{1+\epsilon} = \exp(s(1+\epsilon)X_n)$ and $s < t$, we have by Assumption A3 that
+  \begin{align*}
+    \sup_n \E[Y_n^{1+\epsilon}] \leq \sup_n \E[\exp(tX_n)] < \infty,
+  \end{align*}
+  thus by \lemhref{lem:crystal}, $\E[Y_n] \to \E[Y]$, showing the claim.
+\end{proof}
+
+\subsection{Tightness, \thmhref{thm:convergence} (b)-(k) imply (a)}
+
+In this section we complete the missing parts of the proof of
+\thmhref{thm:convergence}, showing that any of (b)-(k) each imply (a).  First, we
+define a condition on a set of random variables called
+\emph{tightness}, and then prove that tightness implies that every
+sequence of random variables drawn from the set has a (weakly)
+convergent subsequence.  Thus tightness for a set of random variables
+is analogous to compactness for a set of real numbers.
+
+Next, we give a result suggested by \cite{billingsley2009convergence} that we
+then use repeatedly to prove the desired implications in
+\thmhref{thm:convergence}. Informally, the result is as
+follows: Suppose that for a class of functions $F$, we have already
+shown that
+\begin{enumerate}
+\item {\it Uniqueness:} $X =_d Y$ iff for all $f \in F$, $\E[f(X)] = \E[f(Y)]$ (as in
+  \thmhref{thm:equality}).
+\item {\it Forward Result:} If $X_n \to_d X$, then for all $f\in F$, $\E[f(X_n)] \to
+  \E[f(X)]$ (the ``forward half'' of \thmhref{thm:convergence}).
+\item {\it Tightness:} $\E[f(X_n)] \to \E[f(X)]$ for all $f \in F$ implies that the random variables $X_n$ are \emph{tight}.
+\end{enumerate}
+Then the ``backward result'' (the converse to the second point above)
+also holds.  Namely, if for all $f \in F$, $\E[f(X_n)] \to \E[f(X)]$,
+then $X_n \to_d X$.  A precise statement is given later. In addition
+to filling in missing gaps in the proof, we this technique also gives
+alternate proof that any of (d)-(f) imply (a).
+\begin{definition}
+  A set of random variables $\mathcal X$ is \emph{tight} if for every
+  $\epsilon$ there exists $t$ such for all $X \in \mathcal X$, $\P(|X| >
+  t) < \epsilon$, i.e.
+  \begin{align*}
+    \lim_{t \to \infty} \sup_{X \in \mathcal X} \P(|X| > t) = 0.
+  \end{align*}
+\end{definition}
+\begin{theorem}[Prokhorov]
+  \label{thm:prokhorov}
+  A set of random variables $\mathcal X$ is sequentially (or relatively) compact
+  w.r.t. weak convergence iff it is tight.  Namely, $\mathcal X$
+  is tight iff for any sequence of random variables $X_n \in
+  \mathcal X$, there exists a subsequence $X_{n_i}$ and a random
+  variable $X$ such that as $i \to \infty$, $X_{n_i} \to_d X$.
+\end{theorem}
+Generally speaking, the result that tightness implies sequential
+compactness will be the half of the theorem of interest.  For a short
+proof, see \cite{billingsley2012probability}.  For a proof of a
+significantly more general version of the theorem, see Section 5 of
+\cite{billingsley2009convergence}; however, the proof is quite
+complicated.  \thmhref{thm:prokhorov} provides an existence result,
+that there is some limiting random variable.  The following two
+exercises are often used to turn existence into uniqueness.
+\begin{exercise}
+  Prove that $X_n \to_d X$ iff for every subsequence $X_{n_i}$, there
+  exists a further subsubsequence $X_{n_{i_j}}$ such that as $j \to
+  \infty$, $X_{n_{i_j}} \to_d X$.  Hint: use the
+  \thmhref{thm:convergence} (a) and (d).
+\end{exercise}
+\begin{exercise}
+  \label{ex:limit}
+  First, if $Y_n \to_d Y$ and $Y =_d Z$, prove that $Y_n \to_d Z$ as
+  well (easy).  Then, let $X_n$ be a sequence of random variables that
+  is tight and let $X$ be a random variable.  Suppose that for any
+  convergent subsequence $n_i$ with $X_{n_i} \to_d \bar X$, we have
+  $\bar X =_d X$ (and thus $X_{n_i} \to_d X$).  Prove that $X_n \to_d
+  X$ as well.
+\end{exercise}
+A solution can be found in the proofs of Theorem 2.6 and the Corollary
+to Theorem 5.1 in \cite{billingsley2009convergence}.  We our now ready
+to return to the problem of interest, but first we give a technical
+lemma suggested by the discussion following Example 5.5 from
+\cite{billingsley2009convergence}, as described at the start of this
+section.
+\begin{lemma}
+  \label{lem:tech}
+  Given a set of random variables $\mathcal X$ and a set of measurable functions $F$,
+  suppose that
+  \begin{itemize}
+  \item {\bf Uniqueness:} For a random variables $X \in \mathcal X$ and any random variable $Y$, if for all $f \in F$, $\E[f(X)] =\E[f(Y)]$, then $X =_d Y$,
+  \item {\bf Forward Result:} For any random variable $Y$ and a
+    sequence $\{X_n\}\subset \mathcal X$ with $X_n \to_d Y$, for all
+    $f \in F$, $\lim_{n \to \infty} \E[f(X_n)] = \E[f(Y)]$,
+  \item {\bf Tightness:} For any $X \in \mathcal X$ and a sequence
+    $\{X_n\} \subset \mathcal X$, if for all $f \in F$, $\lim_{n \to
+      \infty} \E[f(X_n)] = \E[f(X)]$, then it is implied that that
+    $\{X_n\}$ is tight.
+  \end{itemize}
+  Then for any $X \in \mathcal X$ and any sequence of random variables
+  $\{X_n\}\subset \mathcal X$, we have $\lim_{n \to \infty} \E[f(X_n)]
+  = \E[f(X)]$ for all $f \in F$ implies $X_n \to_d X$.
+\end{lemma}
+Note that the uniqueness assumption will be true whenever $F$ is one
+of the sets of functions considered in \thmhref{thm:equality}, and
+likewise ``forward result'' assumption is part of that we have already
+shown \thmhref{thm:convergence}, thus only the tightness assumption
+will need to be verified for our purposes.  Often, $\mathcal X$ will
+simply be the set of all random variables, but in some instances it
+must be chosen carefully.
+\begin{proof}
+  Suppose that $X \in \mathcal X$ and $\{X_n\} \subset \mathcal X$ is
+  a sequence such that for all $f \in F$, $\lim_{n \to \infty}
+  \E[f(X_n)] = \E[f(X)]$.  Then by the tightness assumption, $\{X_n\}$
+  is tight.  Thus by \thmhref{thm:prokhorov}, there exists a random
+  variable $Y$ (not necessarily in $\mathcal X$) and a subsequence
+  $n_i$ such that as $i \to \infty$, $X_{n_i} \to_d Y$.  Fix any such
+  subsequence and $Y$.  For all $f \in F$,
+  \begin{align}
+    \label{eq:equalDist}
+    \E[f(Y)] =  \lim_{i \to \infty}
+    \E[f(X_{n_i})] = \lim_{n \to \infty} \E[f(X_n)] = \E[f(X)],
+  \end{align}
+  where the first equality follows by the ``forward result'' assumption, the second
+  equality follows as the sequence $\E[f(X_n)]$ is convergent (by our initial
+  assumption) and thus has the same limit as any subsequence, and
+  the final equality follows again by our initial assumption.  Thus by
+  \eqref{eq:equalDist} and the uniqueness assumption, we must have that $Y =_d
+  X$.  Finally, as our choice of convergent
+  subsequence was arbitrary, by \exerhref{ex:limit}, $X_{n} \to_d X$,
+  giving the result.
+\end{proof}
+We can now prove the main results of the section:
+\begin{proof}[Proof of \thmhref{thm:convergence}--(i)-(k) imply (a)]
+  First we show that (i) implies (a).  Given $X_n$ and $X$, let
+  \begin{align*}
+    \mathcal X = \left\{Y \mathrel{\bigg \vert} \forall p \in \Z_+,\, \E[Y^p] \leq \sup_n\E[X_n^p]\right\}.
+  \end{align*}
+  Note that by Assumption A2, $\sup_n\E[X_n^p] < \infty$ for all $p$.
+  Let $F = \{f(x) = x^p \mid p \in \Z_+\}$.  Let $X_n$ and $X$ be such
+  that A1 and A2 hold and for every $f \in F$, $\lim_{n \to \infty}
+  \E[f(X_n)] \to \E[f(X)]$.  We now want apply \lemhref{lem:tech} for
+  $\mathcal X$ and $F$, which clearly would imply the result.  The
+  uniqueness assumption holds from \thmhref{thm:equality} where (i)
+  implies (a).  The forward result holds as for any sequence $\{X_n\}
+  \subset \mathcal X$, we will have assumption A2 satisfied, so we can
+  apply the result that (a) implies (i) as shown in the previous
+  section.  Thus we need only check tightness.
+
+  As $f(x) = x$ is in $F$, we have that $\E[X_n] \to \E[X] < \infty$.
+  As argued previously, this implies that $\sup_n \E[X_n] < \infty$ as
+  well.  Thus for all $n$, by Markov's inequality (recall that $X_n
+  \geq 0$),
+  \begin{align}
+    \label{eq:applyMarkov}
+    \P(X_n > t) \leq \frac{\E[X_n]}{t} \leq \frac{\sup_m \E[X_m]}{t}.
+  \end{align}
+  Thus $\{X_n\}$ is tight. Thus by \lemhref{lem:tech}, $X_n \to_d X$,
+  showing (i) implies (a) as claimed.
+
+  The argument that (k) implies (a) is essentially the same, expect
+  that \eqref{eq:applyMarkov} is replaced by (for $s$ such that $\sup_n \E[\exp(sX_n)] <\infty$)
+  \begin{align*}
+    \P(X_n \geq t) = \P(\exp(s X_n) \geq \exp(s t)) \leq \frac{\E[\exp(sX_n)]}{\exp(s t)} \leq \frac{\sup_m \E[\exp(s X_m)]}{\exp(s t)}.
+  \end{align*}
+\end{proof}
+This approach of showing existence through tightness then uniqueness
+through \thmhref{thm:equality} is quite versatile.  While showing
+tightness in these cases was quite easy, it is not always this way.
+Now we apply the Lemma in a few interesting cases.
+\begin{exercise}
+  Assuming that (a) implies (f) from \thmhref{thm:convergence}, use
+  \lemhref{lem:tech} to show that (f) implies (a).  \emph{Hint:} To
+  show tightness, start by proving that (g) implies (a) by bounding
+  $\P(X_n > t) \leq \E[f(X_n)]$ for some bounded Lipschitz function
+  $f$.
+\end{exercise}
+In both the proofs of \thmhref{thm:equality} and
+\thmhref{thm:convergence}, when showing (f) implies (a), we are
+\emph{essentially} approximating $g_a(t) = \1(t<a)$ with bounded
+Lipschitz functions $g_{a,\epsilon}(t)$.  This exercise is interesting
+as we eliminate this redundancy (at the expense of using some heavier
+tools) in this exercise.
+\begin{exercise}
+  Assuming (a) implies (b) and (g) from \thmhref{thm:convergence}, use
+  \lemhref{lem:tech} to show that (b) and (g) each imply (a). \emph{Hint:} To
+  show tightness, first prove the inequalities
+  \begin{align*}
+    \P\left(|X_n| \geq \frac 2 u\right) \leq \frac{1}{u} \int_{-u}^u (1-  \phi_{X_n}(t))dt
+  \end{align*}
+  and
+  \begin{align*}
+    \P\left(|X_n| \geq \frac 2 u\right) \leq \frac{1}{u} \int_{0}^u (1-  \mathcal L_{X_n}(t))dt
+  \end{align*}
+  This completes the proof of \thmhref{thm:convergence} (assuming we have \thmhref{thm:equality}).
+\end{exercise}
+To show tightness in (g) implies (a), see \cite{billingsley2009convergence} example 5.5.  To show tightness for (b) implies (a), see \cite{billingsley2012probability}, Theorem 26.3.
+\begin{exercise}
+  Suppose that $X_n$ and $X$ both have support on the integers.  Let
+  $F = \{f(x) = \1(x = z) \mid z \in \Z\}$.  Prove that $X_n \to_d X$
+  iff $\lim_{n \to \infty} \E[f(X_n)] = \E[f(X)]$ for all $f \in F$.
+  (This problem was also on your homework, but now you have \lemhref{lem:tech}.)
+\end{exercise}
+
+\subsection{A slightly stronger ``backward'' result}
+
+
+The Lemma below is exactly the same as \lemhref{lem:tech} except the assumption of the ``Forward Result'' has been made weaker.
+\begin{lemma}
+  \label{lem:techHard}
+  Given a set of random variables $\mathcal X$ and a set of measurable functions $F$,
+  suppose that
+  \begin{itemize}
+  \item {\bf Uniqueness:} For a random variables $X \in \mathcal X$
+    and any random variable $Y$, if for all $f \in F$, $\E[f(X)]
+    =\E[f(Y)]$, then $X =_d Y$,
+  \item {\bf Restricted Forward Result:} For any $X \in \mathcal X$
+    and a sequence $\{X_n\} \subset \mathcal X$ such that for all $f
+    \in F$, $\E[f(X_n)] \to \E[f(X)]$, if $n_{i}$ is a subsequence and
+    $Y$ is a random variable is such that $X_{n_i} \to_d Y$, then we
+    have that for all $f \in F$, $\lim_{i \to \infty} \E[f(X_{n_i})] =
+    \E[f(Y)]$,
+  \item {\bf Tightness:} For any $X \in \mathcal X$ and a sequence
+    $\{X_n\}\subset \mathcal X$, if for all $f \in F$, $\lim_{n \to
+      \infty} \E[f(X_n)] = \E[f(X)]$, then it is implied that that
+    $\{X_n\}$ is tight.
+  \end{itemize}
+  Then for any $X \in \mathcal X$ and any sequence of random variables
+  $\{X_n\}\subset \mathcal X$, we have $\lim_{n \to \infty} \E[f(X_n)]
+  = \E[f(X)]$ for all $f \in F$ implies $X_n \to_d X$.  
+\end{lemma}
+The key idea is that since in the conclusion of the lemma, we will
+assume that $\lim_{n \to \infty} \E[f(X_n)] = \E[f(X)]$ for all $f \in
+F$, and since we were only applying the forward result to subsequences
+of the sequence $X_n$, we can use this additional information to help
+prove the forward result in the relevant special case.  This can be
+very helpful if we are not exactly sure what we should take $\mathcal
+X$ to be.  For example, we can apply Lemma 4 with $F = \{f(x) = x^p
+\mid p \in \Z_+\}$ and $\mathcal X$ to be the set of random variables
+satisfying Assumption A1, i.e. we can drop Assumption A2.  Note that
+we do not get a stronger result, we just can be less careful in
+choosing $\mathcal X$ when we apply the Lemma.
+
+The proof is omitted as it is exactly the same as the proof
+\lemhref{lem:tech}, since in the proof we only apply the ``forward
+result'' when the ``restricted forward result'' would be sufficient.
+
+
+\subsection{Notes and References}
+
+The class of functions $F = \{f \colon \R \to \R \mid \|f\|_{\BL}\}$
+is of particular interest because the quantity
+\begin{align*}
+  \rho(X,Y) = \sup_{f \in F} |\E[f(X)] - \E[f(Y)]|
+\end{align*}
+is a \href{http://en.wikipedia.org/wiki/Metric_(mathematics)#Definition}{metric} on the space of random variables.  See
+\cite{dudley2002real} for more details.
+
+The moment problem, one
+of the most studied problems in probability, asks (1.) given a sequence of moments, does there
+exist a random variable with these moments, and (2.) is this random
+variable unique (often within a class of random variables).  In
+\thmhref{thm:equality}, we simply gave the sufficient condition for
+uniqueness that $\E[\exp(sX)]$ is finite, but much more can be said
+here.
+
+A closely related question asks: given a sequence of random variables
+$X_n$ and a random variable $X$ with $\lim_{n \to \infty} \E[X_n^p] =
+\E[X^p]$ for all $p \in \Z_+$, does $X_n \to_d X$?  This problem was
+first addressed by \cite{frechet1931proof} (and potentially
+\cite{wintner1928konvergenzbegriff}, German) under the name ``the
+generalized second limit theorem,'' presumably where the ``second
+limit theorem'' is the CLT, as this result was used when $X$ was the
+standard normal and $X_n$ was an i.i.d. sum of random variables to
+prove restricted versions of the CLT.  This problem has attracted
+considerably less attention than the moment problem, and is often not
+included in books, as lamented in \cite{rao1950generalized}.  In  \cite{rao1950generalized},
+they obtain the same result as \thmhref{thm:convergence}, (a) iff (i),
+although with a different approach.
+
+
+An alternative approach is taken \cite{chung2000course} to prove that
+(i) implies (a) using the weaker notion of \emph{vague convergence}
+and
+\href{http://www.math.ust.hk/~makchen/Math541/Chap2Sec1.pdf}{Helly's
+  Selection Theorem} instead of tightness, see Theorem 4.5.5. and
+``proof,'' (an anonymous ``standard theorem on the inversion of
+repeated limits'' is heavily relied upon).  The proof of tightness for
+$\R$ valued random variables given in
+\cite{billingsley2012probability} relies on Helly's Selection Theorem
+on $\R$, and the more general proof of \thmhref{thm:prokhorov} given
+in \cite{billingsley2009convergence} is similar to the proof of a more
+general version of Helly's Selection Theorem.  While we are using
+slightly heavier machinery, tightness is a powerful tool that is frequently
+used applied probability, while vague convergence lies somewhat below
+our (``Applied Probability's'') radar.
+
+In Section 5 of \cite{billingsley2009convergence}, Example 5.5
+considers \lemhref{lem:tech} in the special case for $F = \{f(x) =
+\exp(-sx)\mid s \geq 0\}$, the Laplace transform. Then, the key
+assumptions of \lemhref{lem:tech} are identified, and the general
+result of \lemhref{lem:tech} is suggested in high level terms.
+
+
+
+\phantomsection
+\bibliography{bibliography}{}
+\bibliographystyle{plain}
+
+
+\end{document}

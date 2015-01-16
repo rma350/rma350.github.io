@@ -8,3 +8,4 @@ github_username:  rma350
 
 # Build settings
 markdown: kramdown
+exclude: [assets/posts/equivalent-notions-for-convergence/]
