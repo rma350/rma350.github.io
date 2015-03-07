@@ -389,11 +389,11 @@ function kidneyxweb(){
     }
     var strongName;
     try {
-      unflattenKeylistIntoAnswers(['ie8'], '06C57CB88E4BC34C295F33CD2F540472');
-      unflattenKeylistIntoAnswers(['safari'], '166EC00ECD4609AA39A34123F738740A');
-      unflattenKeylistIntoAnswers(['ie9'], '66DEC19CEC51D7E5FEE1C2AAD3950E4B');
-      unflattenKeylistIntoAnswers(['ie10'], 'E177476F325472D316364BA1831C0F98');
-      unflattenKeylistIntoAnswers(['gecko1_8'], 'FC418D8EA394AAA020D25EE19CED808C');
+      unflattenKeylistIntoAnswers(['ie10'], '2D7EF2E1476D138F3F57DE809DCAB2BD');
+      unflattenKeylistIntoAnswers(['safari'], '416E3F4D8E8787262BC43168C299EC9F');
+      unflattenKeylistIntoAnswers(['ie8'], '744AD70F57DCE519BD89EF0677D96B32');
+      unflattenKeylistIntoAnswers(['gecko1_8'], 'AD12EB97D3F273A0B058CF3C24720286');
+      unflattenKeylistIntoAnswers(['ie9'], 'DFCDBA03F59BE602AF19902D7CFFCEB7');
       strongName = answers[computePropValue('user.agent')];
       var idx = strongName.indexOf(':');
       if (idx != -1) {
